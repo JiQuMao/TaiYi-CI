@@ -1,4 +1,4 @@
-name: IPQ60XX-OpenWrt
+name: TaiYi-CI-OpenWrt
 
 on:
   workflow_dispatch:
