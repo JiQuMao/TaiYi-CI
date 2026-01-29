@@ -1,4 +1,4 @@
-name: TaiYi-CI-OpenWrt
+name: TaiYi-OpenWrt
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ env:
   CLASH_KERNEL: amd64
   UPLOAD_BIN_DIR: false
   FIRMWARE_RELEASE: true
-  FIRMWARE_TAG: IPQ60XX
+  FIRMWARE_TAG: TaiYi
   TZ: Asia/Shanghai
 
 jobs:
