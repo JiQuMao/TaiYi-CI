@@ -1,4 +1,4 @@
-name: TaiYi-25.12-OpenWrt
+name: TaiYi-OpenWrt
 
 on:
   workflow_dispatch:
