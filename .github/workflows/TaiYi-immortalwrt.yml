@@ -1,4 +1,4 @@
-name: TaiYi-OpenWrt
+name: TaiYi-immortalwrt
 
 on:
   workflow_dispatch:
