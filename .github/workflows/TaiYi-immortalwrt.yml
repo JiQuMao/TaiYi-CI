@@ -1,4 +1,4 @@
-name: TaiYi-immortalwrt
+name: TaiYi-ImmortalWrt
 
 on:
   workflow_dispatch:
@@ -7,8 +7,8 @@ on:
   #   - cron: 0 20 * * *
 
 env:
-  REPO_URL: https://github.com/JiQuMao/openwrt-ipq.git
-  REPO_BRANCH: 24.10-nss
+  REPO_URL: https://github.com/JiQuMao/immortalwrt.git
+  REPO_BRANCH: openwrt-25.12
   CONFIG_FILE: configs/TaiYi.config
   GENERAL_CONFIG_FILE: configs/General.config
   DIY_SCRIPT: scripts/script.sh
@@ -59,7 +59,7 @@ jobs:
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
         VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
         echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
-        VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' include/kernel-6.6)
+        VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
         echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
 
     - name: Generate Variables(生成变量)
@@ -139,8 +139,8 @@ jobs:
         cd $OPENWRT_PATH/bin/targets/*/*
         cp $OPENWRT_PATH/.config TaiYi.config
         mv config.buildinfo TaiYi.config.buildinfo
-        mv openwrt-qualcommax-ipq60xx.manifest TaiYi.manifest
-        mv -f $OPENWRT_PATH/bin/packages/*/*/*.ipk packages
+        mv immortalwrt-qualcommax-ipq60xx.manifest TaiYi.manifest
+        mv -f $OPENWRT_PATH/bin/packages/*/*/*.apk packages
         tar -zcf TaiYi.Packages.tar.gz packages
         rm -rf packages feeds.buildinfo version.buildinfo sha256sums profiles.json
         echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
@@ -164,11 +164,11 @@ jobs:
         body: |
           **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
           ### 📒 固件信息
-          - 这是开启全功能NSS的6.6内核固件 基于OpenWrt-IPQ
-          - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
+          - 这是开启全功能NSS的6.12内核固件
+          - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 ImmortalWrt 固件
           - ⚽ 固件源码: ${{ env.REPO_URL }}
           - 💝 源码分支: ${{ env.REPO_BRANCH }}
-          - 🌐 默认地址: **192.168.1.1**
+          - 🌐 默认地址: **192.168.2.1**
           - 🔑 默认密码: none
           ### 🧊 固件版本
           - 固件内核版本：**${{ env.VERSION_KERNEL }}**
@@ -187,3 +187,10 @@ jobs:
         echo "staging: $(du -sh $OPENWRT_PATH/staging_dir | cut -f 1)"
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Delete Old Workflows(删除旧工作流)
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        retain_days: 2
+        keep_minimum_runs: 0
